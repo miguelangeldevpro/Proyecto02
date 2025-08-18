@@ -1,44 +1,84 @@
 // src/pages/Products.tsx
-import React from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { products, marcas, categories, Product, Marca, Category } from "../data/products";
+import { useCart } from "../context/CartContext";
 
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-};
+export default function Products() {
+  const { addToCart } = useCart();
 
-const products: Product[] = [
-  { id: 1, name: "iPhone 15 Pro", price: 1200, image: "https://via.placeholder.com/200?text=iPhone+15+Pro" },
-  { id: 2, name: "Samsung Galaxy S23", price: 1000, image: "https://via.placeholder.com/200?text=Galaxy+S23" },
-  { id: 3, name: "Xiaomi 13 Pro", price: 800, image: "https://via.placeholder.com/200?text=Xiaomi+13+Pro" },
-  { id: 4, name: "Google Pixel 8", price: 950, image: "https://via.placeholder.com/200?text=Pixel+8" },
-  { id: 5, name: "OnePlus 11", price: 850, image: "https://via.placeholder.com/200?text=OnePlus+11" },
-];
+  // Estado de filtros
+  const [selectedMarca, setSelectedMarca] = useState<number | "all">("all");
+  const [selectedCategory, setSelectedCategory] = useState<number | "all">("all");
 
-const Products: React.FC = () => {
+  // Filtrar productos
+  const filteredProducts = products.filter((p: Product) => {
+    return (selectedMarca === "all" || p.idmarca === selectedMarca) &&
+           (selectedCategory === "all" || p.categoryId === selectedCategory);
+  });
+
   return (
-    <Container className="mt-4">
-      <h1 className="mb-4 text-center">📱 Tienda de Celulares</h1>
-      <Row>
-        {products.map((product) => (
-          <Col key={product.id} sm={12} md={6} lg={4} className="mb-4">
-            <Card>
-              <Card.Img variant="top" src={product.image} />
-              <Card.Body>
-                <Card.Title>{product.name}</Card.Title>
-                <Card.Text>
-                  Precio: <strong>${product.price}</strong>
-                </Card.Text>
-                <Button variant="primary">Agregar al carrito</Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    </Container>
-  );
-};
+    <div className="container py-4">
 
-export default Products;
+      <div className="text-center mb-5">
+        <h1 className="display-5">Todos los Productos</h1>
+        <p className="lead">Filtra por marca o categoría y agrega al carrito tus productos favoritos.</p>
+      </div>
+
+      {/* Filtros */}
+      <div className="row mb-4">
+        <div className="col-md-6 mb-2">
+          <select className="form-select" value={selectedMarca} onChange={(e) => setSelectedMarca(e.target.value === "all" ? "all" : Number(e.target.value))}>
+            <option value="all">Todas las marcas</option>
+            {marcas.map((marca: Marca) => (
+              <option key={marca.idmarca} value={marca.idmarca}>{marca.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="col-md-6 mb-2">
+          <select className="form-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value === "all" ? "all" : Number(e.target.value))}>
+            <option value="all">Todas las categorías</option>
+            {categories.map((cat: Category) => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Listado de productos */}
+      <div className="row">
+        {filteredProducts.length === 0 ? (
+          <p className="text-center">No hay productos que coincidan con el filtro.</p>
+        ) : (
+          filteredProducts.map((product: Product) => {
+            const marca = marcas.find(m => m.idmarca === product.idmarca);
+            const category = categories.find(c => c.id === product.categoryId);
+
+            return (
+              <div key={product.id} className="col-6 col-md-4 mb-4">
+                <div className="card h-100 shadow-sm">
+                  <img 
+                    src={product.image} 
+                    className="card-img-top p-3" 
+                    alt={product.name} 
+                    style={{ height: "200px", objectFit: "contain" }} 
+                  />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title">{product.name}</h5>
+                    <p className="text-muted mb-1">{marca?.name} - {category?.name}</p>
+                    <p className="text-success fw-bold mb-1">${product.price}</p>
+                    <p className="text-truncate mb-2">{product.description}</p>
+                    <button className="btn btn-primary mt-auto" onClick={() => addToCart(product)}>
+                      Agregar al carrito
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+}
