@@ -1,17 +1,43 @@
-// src/pages/Home.tsx
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { marcas, categories, products, Marca, Category, Product } from "../data/products";
 import { useCart } from "../context/CartContext";
+import IframeMap from "../components/IframeMap";  
+
 
 export default function Home() {
-  // Productos destacados: los primeros 6 por stock
   const featuredProducts: Product[] = products.slice(0, 6);
-   const { addToCart } = useCart();
+  const { addToCart } = useCart();
+
+  // Estado para controlar alerta
+  const [alert, setAlert] = useState<{ show: boolean; message: string }>({ show: false, message: "" });
+
+  // Función para agregar al carrito con alerta Bootstrap
+  const handleAddToCart = (product: Product) => {
+    addToCart(product);
+    setAlert({ show: true, message: `Producto "${product.name}" agregado al carrito.` });
+
+    // Ocultar alerta después de 3 segundos
+    setTimeout(() => {
+      setAlert({ show: false, message: "" });
+    }, 3000);
+  };
 
   return (
     <div className="container py-4">
+      {/* Alerta Bootstrap */}
+      {alert.show && (
+        <div className="alert alert-success alert-dismissible fade show" role="alert">
+          {alert.message}
+          <button
+            type="button"
+            className="btn-close"
+            aria-label="Cerrar"
+            onClick={() => setAlert({ show: false, message: "" })}
+          ></button>
+        </div>
+      )}
 
       {/* Sección de bienvenida */}
       <div className="text-center mb-5">
@@ -24,11 +50,11 @@ export default function Home() {
         <div className="carousel-inner">
           {marcas.map((marca: Marca, index: number) => (
             <div key={marca.idmarca} className={`carousel-item ${index === 0 ? "active" : ""}`}>
-              <img 
-                src={marca.image} 
-                className="d-block mx-auto" 
-                alt={marca.name} 
-                style={{ maxHeight: "150px", objectFit: "contain" }} 
+              <img
+                src={marca.image}
+                className="d-block mx-auto"
+                alt={marca.name}
+                style={{ maxHeight: "150px", objectFit: "contain" }}
               />
             </div>
           ))}
@@ -66,12 +92,17 @@ export default function Home() {
           {featuredProducts.map((product: Product) => (
             <div key={product.id} className="col-6 col-md-4 mb-4">
               <div className="card h-100 shadow-sm">
-                <img src={product.image} className="card-img-top p-3" alt={product.name} style={{ height: "200px", objectFit: "contain" }} />
+                <img
+                  src={product.image}
+                  className="card-img-top p-3"
+                  alt={product.name}
+                  style={{ height: "200px", objectFit: "contain" }}
+                />
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{product.name}</h5>
                   <p className="text-success fw-bold">${product.price}</p>
                   <p className="text-truncate">{product.description}</p>
-                  <button className="btn btn-primary mt-auto" onClick={() => addToCart(product)}>
+                  <button className="btn btn-primary mt-auto" onClick={() => handleAddToCart(product)}>
                     Agregar al carrito
                   </button>
                 </div>
@@ -81,6 +112,7 @@ export default function Home() {
         </div>
       </div>
 
+     
     </div>
   );
 }

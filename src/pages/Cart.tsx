@@ -42,9 +42,15 @@ export default function Cart() {
               </tr>
             </tbody>
           </table>
-          <div className="text-end">
-            <button className="btn btn-secondary" onClick={clearCart}>Vaciar Carrito</button>
-          </div>
+          <div className="d-flex justify-content-start gap-2">
+  <button className="btn btn-secondary" onClick={clearCart}>
+    Vaciar Carrito
+  </button>
+  <button className="btn btn-primary" onClick={clearCart}>
+    Siguiente
+  </button>
+</div>
+
         </>
       )}
     </div>
