@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 
-
 export default function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -39,7 +38,7 @@ export default function ContactForm() {
               </p>
 
               <form onSubmit={handleSubmit}>
-                <div className="mb-3">z
+                <div className="mb-3">
                   <label htmlFor="name" className="form-label">Nombre completo</label>
                   <input
                     type="text"
@@ -48,6 +47,7 @@ export default function ContactForm() {
                     placeholder="Escriba su nombre"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    maxLength={50}
                     required
                   />
                 </div>
@@ -74,6 +74,7 @@ export default function ContactForm() {
                     placeholder="Motivo de contacto"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
+                    maxLength={100}
                     required
                   />
                 </div>
@@ -87,6 +88,7 @@ export default function ContactForm() {
                     rows={5}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    maxLength={500}
                     required
                   />
                 </div>
@@ -104,7 +106,14 @@ export default function ContactForm() {
         {/* Columna derecha: mapa */}
         <div className="col-lg-6">
           <div className="card shadow-sm border-0 rounded-3 h-100">
-          
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3900.751331763566!2d-77.04279368561697!3d-12.0463740914666!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8bfc3f77df7%3A0x1e7f9db3c6a3b72f!2sLima%2C%20Per%C3%BA!5e0!3m2!1ses!2spe!4v1692467891234!5m2!1ses!2spe"
+              width="100%"
+              height="100%"
+              style={{ border: 0, borderRadius: "0.5rem" }}
+              allowFullScreen={true}
+              loading="lazy"
+            ></iframe>
           </div>
         </div>
       </div>
