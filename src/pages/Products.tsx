@@ -6,6 +6,12 @@ import Swal from "sweetalert2";
 import { products, marcas, categories, Product, Marca, Category } from "../data/products";
 import { useCart } from "../context/CartContext";
 
+//importaciones de  inconos
+import { Eye } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
+//end importaciones de iconos
+
+
 export default function Products() {
   const { addToCart } = useCart();
 
@@ -23,11 +29,14 @@ export default function Products() {
   // ✅ función para mostrar SweetAlert
   const showAlert = (message: string) => {
     Swal.fire({
-      title: "Producto agregado",
-      text: message,
+      position: "top-end",
       icon: "success",
-      timerProgressBar: true,
+      title: "Producto agregado",
+      showConfirmButton: false,
+      timer: 1300
     });
+
+    
   };
 
   return (
@@ -87,39 +96,49 @@ export default function Products() {
             return (
               <div key={product.id} className="col-6 col-md-4 mb-4">
                 <div className="card h-100 shadow-sm">
-                  <img
+                  {/* <img
                     src={product.image}
                     className="card-img-top p-3"
                     alt={product.name}
                     style={{ height: "200px", objectFit: "contain" }}
+                  /> */}
+
+                  <img
+                    src={product.image}
+                    className="card-img-top p-3"
+                    alt={product.name}
+                    style={{ height: "200px", objectFit: "contain", cursor: "pointer" }}
+                    onClick={() => setSelectedProduct(product)}
+                    data-bs-toggle="modal"
+                    data-bs-target="#productModal"
                   />
+                  
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{product.name}</h5>
                     <p className="text-muted mb-1">
                       {marca?.name} - {category?.name}
                     </p>
-                    <p className="text-success fw-bold mb-1">${product.price}</p>
+                    <p className="text-success fw-bold mb-1">S/{product.price}.00</p>
                     <p className="text-truncate mb-2">{product.description}</p>
                     
                     {/* Botón Comprar Ahora con SweetAlert2 */}
                     <button
-                      className="btn btn-primary mt-auto"
+                      className="btn btn-primary mt-auto d-flex justify-content-center align-items-center gap-2"
                       onClick={() => {
                         addToCart(product);
                         showAlert(`${product.name} agregado al carrito 🛒`);
                       }}
                     >
-                      Comprar Ahora
+                      <ShoppingCart size={18} /> Comprar Ahora
                     </button>
-
                     <button
-                      className="btn btn-outline-secondary mt-2"
-                      onClick={() => setSelectedProduct(product)}
-                      data-bs-toggle="modal"
-                      data-bs-target="#productModal"
-                    >
-                      
-                    </button>
+                        className="btn btn-outline-secondary mt-2 d-flex justify-content-center align-items-center gap-2"
+                        onClick={() => setSelectedProduct(product)}
+                        data-bs-toggle="modal"
+                        data-bs-target="#productModal"
+                      >
+                        <Eye size={18} /> Ver
+                      </button>                
                   </div>
                 </div>
               </div>
@@ -173,8 +192,8 @@ export default function Products() {
                     <p>{selectedProduct.description}</p>
 
                     {/* Botón Añadir al carrito con SweetAlert2 */}
-                    <button
-                      className="btn btn-success mt-3"
+                  <button
+                      className="btn btn-success mt-3 d-flex justify-content-center align-items-center gap-2"
                       onClick={() => {
                         addToCart(selectedProduct);
                         showAlert(`${selectedProduct.name} agregado al carrito 🛒`);
@@ -191,7 +210,7 @@ export default function Products() {
                         }
                       }}
                     >
-                      Añadir al carrito
+                      <ShoppingCart size={18} /> Añadir al carrito
                     </button>
                   </div>
                 </div>

@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { ShoppingCart } from "lucide-react";
+
 
 export default function Navbar() {
   const { cartItems } = useCart();
@@ -48,15 +50,11 @@ export default function Navbar() {
           <ul className="navbar-nav ms-3 d-flex align-items-center">
             <li className="nav-item position-relative">
               <Link className="nav-link" to="/cart">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png"
-                  alt="Carrito de compras"
-                  style={{ width: "28px", height: "28px" }}
-                />
+                <ShoppingCart size={28} />
                 {totalCount > 0 && (
                   <span
                     className="position-absolute translate-middle badge rounded-pill bg-danger"
-                    style={{ top: "8px", left: "28px", fontSize: "12px" }}
+                    style={{ top: "0px", right: "0px", fontSize: "12px" }}
                   >
                     {totalCount}
                   </span>

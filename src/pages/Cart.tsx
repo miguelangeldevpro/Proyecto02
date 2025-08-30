@@ -1,6 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useCart } from "../context/CartContext";
+import { Trash2 } from "lucide-react";
 
 export default function Cart() {
   const { cartItems, removeFromCart, clearCart } = useCart();
@@ -28,17 +29,22 @@ export default function Cart() {
               {cartItems.map((item, index) => (
                 <tr key={index}>
                   <td>{item.product.name}</td>
-                  <td>${item.product.price}</td>
+                  <td>S/{item.product.price}</td>
                   <td>{item.quantity}</td>
-                  <td>${item.product.price * item.quantity}</td>
+                  <td>S/{item.product.price * item.quantity}</td>
                   <td>
-                    <button className="btn btn-danger btn-sm" onClick={() => removeFromCart(item.product.id)}>Eliminar</button>
+                    <button
+                        className="btn btn-danger btn-sm d-flex justify-content-center align-items-center"
+                        onClick={() => removeFromCart(item.product.id)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
                   </td>
                 </tr>
               ))}
               <tr>
                 <td colSpan={3} className="text-end fw-bold">Total</td>
-                <td colSpan={2} className="fw-bold">${total}</td>
+                <td colSpan={2} className="fw-bold">S/{total}.00</td>
               </tr>
             </tbody>
           </table>
