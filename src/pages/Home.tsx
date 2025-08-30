@@ -5,19 +5,30 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { marcas, categories, products, Marca, Category, Product } from "../data/products";
 import { useCart } from "../context/CartContext";
 import ContactForm from "../components/ContactForm";
+import Swal from "sweetalert2";
 
 export default function Home() {
   const featuredProducts: Product[] = products.slice(0, 6);
   const { addToCart } = useCart();
 
-  const [alert, setAlert] = useState<{ show: boolean; message: string }>({ show: false, message: "" });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  // ✅ Función para mostrar alertas con SweetAlert2
+  const showAlert = (message: string) => {
+    Swal.fire({
+      title: "Producto agregado",
+      text: message,
+      icon: "success",
+      timerProgressBar: true,
+  
+      
+    });
+  };
 
   // Agregar al carrito con alerta
   const handleAddToCart = (product: Product) => {
     addToCart(product);
-    setAlert({ show: true, message: `Producto "${product.name}" agregado al carrito.` });
-    setTimeout(() => setAlert({ show: false, message: "" }), 3000);
+    showAlert(`"${product.name}" fue agregado al carrito.`);
   };
 
   const handleViewMore = (product: Product) => {
@@ -28,17 +39,6 @@ export default function Home() {
 
   return (
     <div>
-      {/* ✅ Alerta Bootstrap */}
-      {alert.show && (
-        <div
-          className="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3"
-          style={{ zIndex: 2000 }}
-        >
-          {alert.message}
-          <button type="button" className="btn-close" onClick={() => setAlert({ show: false, message: "" })}></button>
-        </div>
-      )}
-
       {/* 🔹 Hero con carrusel */}
       <div className="hero-container position-relative">
         <div
@@ -57,10 +57,20 @@ export default function Home() {
               />
             </div>
             <div className="carousel-item">
-            
+              <img
+                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+                className="d-block w-100"
+                alt="Auriculares"
+                style={{ height: "90vh", objectFit: "cover" }}
+              />
             </div>
             <div className="carousel-item">
-              
+              <img
+                src="https://images.unsplash.com/photo-1587829741301-dc798b83add3"
+                className="d-block w-100"
+                alt="Laptop"
+                style={{ height: "90vh", objectFit: "cover" }}
+              />
             </div>
           </div>
         </div>
@@ -74,71 +84,12 @@ export default function Home() {
             Bienvenido a <span style={{ color: "#0d6efd" }}>MovilNova</span>
           </h1>
           <p className="lead fs-4">Compra los últimos smartphones, laptops, accesorios y mucho más.</p>
-          <div className="mt-4">
-           
-            
-          </div>
         </div>
       </div>
 
-      {/* Carrusel de marcas */}
-      <div
-        id="brandsCarousel"
-        className="carousel slide mb-5 mt-5 container"
-        data-bs-ride="carousel"
-      >
-        <div className="carousel-inner">
-          {marcas.map((marca: Marca, index: number) => (
-            <div
-              key={marca.idmarca}
-              className={`carousel-item ${index === 0 ? "active" : ""}`}
-            >
-              <img
-                src={marca.image}
-                className="d-block mx-auto"
-                alt={marca.name}
-                style={{ maxHeight: "150px", objectFit: "contain" }}
-              />
-            </div>
-          ))}
-        </div>
-        <button
-          className="carousel-control-prev"
-          type="button"
-          data-bs-target="#brandsCarousel"
-          data-bs-slide="prev"
-        >
-          <span className="carousel-control-prev-icon" />
-        </button>
-        <button
-          className="carousel-control-next"
-          type="button"
-          data-bs-target="#brandsCarousel"
-          data-bs-slide="next"
-        >
-          <span className="carousel-control-next-icon" />
-        </button>
-      </div>
-
-      {/* Categorías */}
-      <div className="container mb-5">
-        <h2 className="mb-4">Categorías</h2>
-        <div className="row">
-          {categories.map((cat: Category) => (
-            <div key={cat.id} className="col-6 col-md-2 mb-3">
-              <div className="card h-100 shadow-sm border-0">
-                <div className="card-body d-flex align-items-center justify-content-center">
-                  <h6 className="card-title text-center">{cat.name}</h6>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Productos destacados */}
+      {/* Productos Destacados */}
       <div id="featured" className="container mb-5">
-        <h2 className="mb-4">Productos Destacados</h2>
+        <h2 className="mb-4"> </h2>
         <div className="row">
           {featuredProducts.map((product: Product) => (
             <div key={product.id} className="col-6 col-md-4 mb-4">

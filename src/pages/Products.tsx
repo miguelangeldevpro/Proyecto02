@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Swal from "sweetalert2";
 import { products, marcas, categories, Product, Marca, Category } from "../data/products";
 import { useCart } from "../context/CartContext";
 
@@ -10,7 +11,6 @@ export default function Products() {
 
   const [selectedMarca, setSelectedMarca] = useState<number | "all">("all");
   const [selectedCategory, setSelectedCategory] = useState<number | "all">("all");
-
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const filteredProducts = products.filter((p: Product) => {
@@ -19,6 +19,16 @@ export default function Products() {
       (selectedCategory === "all" || p.categoryId === selectedCategory)
     );
   });
+
+  // ✅ función para mostrar SweetAlert
+  const showAlert = (message: string) => {
+    Swal.fire({
+      title: "Producto agregado",
+      text: message,
+      icon: "success",
+      timerProgressBar: true,
+    });
+  };
 
   return (
     <div className="container py-4">
@@ -91,12 +101,12 @@ export default function Products() {
                     <p className="text-success fw-bold mb-1">${product.price}</p>
                     <p className="text-truncate mb-2">{product.description}</p>
                     
-                    {/* Botón Comprar Ahora con alert */}
+                    {/* Botón Comprar Ahora con SweetAlert2 */}
                     <button
                       className="btn btn-primary mt-auto"
                       onClick={() => {
                         addToCart(product);
-                        alert(`${product.name} fue agregado al carrito ✅`);
+                        showAlert(`${product.name} agregado al carrito 🛒`);
                       }}
                     >
                       Comprar Ahora
@@ -108,7 +118,7 @@ export default function Products() {
                       data-bs-toggle="modal"
                       data-bs-target="#productModal"
                     >
-                      Ver más
+                      
                     </button>
                   </div>
                 </div>
@@ -162,19 +172,22 @@ export default function Products() {
                     </p>
                     <p>{selectedProduct.description}</p>
 
-                    {/* Botón Añadir al carrito con alert */}
+                    {/* Botón Añadir al carrito con SweetAlert2 */}
                     <button
                       className="btn btn-success mt-3"
                       onClick={() => {
                         addToCart(selectedProduct);
-                        alert(`${selectedProduct.name} fue agregado al carrito ✅`);
+                        showAlert(`${selectedProduct.name} agregado al carrito 🛒`);
 
+                        // cerrar modal con Bootstrap
                         const modal = document.getElementById("productModal");
                         if (modal) {
                           (modal as any).classList.remove("show");
                           document.body.classList.remove("modal-open");
                           modal.setAttribute("aria-hidden", "true");
                           modal.removeAttribute("aria-modal");
+                          const backdrop = document.querySelector(".modal-backdrop");
+                          if (backdrop) backdrop.remove();
                         }
                       }}
                     >

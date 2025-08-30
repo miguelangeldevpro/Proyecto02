@@ -9,7 +9,7 @@ export default function Navbar() {
   const totalCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3 sticky-top">
       <div className="container">
         {/* Logo */}
         <Link className="navbar-brand fw-bold fs-4" to="/">
