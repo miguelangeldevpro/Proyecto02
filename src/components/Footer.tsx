@@ -20,7 +20,7 @@ export default function Footer() {
               <li><Link to="/" className="text-decoration-none text-light">Inicio</Link></li>
               <li><Link to="/products" className="text-decoration-none text-light">Productos</Link></li>
               <li><Link to="/contact" className="text-decoration-none text-light">Contacto</Link></li>
-           
+              <li><Link to="/checkout" className="text-decoration-none text-light">Pago</Link></li>
             </ul>
           </div>
 
@@ -28,7 +28,7 @@ export default function Footer() {
           <div className="col-md-4 mb-3">
             <h5>Contacto</h5>
             <p className="mb-1">📍 Av. Principal 123, Lima - Perú</p>
-            <p className="mb-1">📞 +51 999 999 999</p>
+            <p className="mb-1">📞 +51 991 004 325</p>
             <p>📧 contacto@tienda.com</p>
           </div>
 
@@ -54,6 +54,17 @@ export default function Footer() {
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/733/733579.png"
                   alt="Twitter"
+                  style={{ width: "28px", height: "28px" }}
+                />
+              </a>
+              <a
+                href="https://wa.me/51991004325"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/733/733585.png"
+                  alt="WhatsApp"
                   style={{ width: "28px", height: "28px" }}
                 />
               </a>
