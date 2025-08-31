@@ -1,3 +1,4 @@
+// src/App.tsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
@@ -9,6 +10,11 @@ import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import ContactForm from "./components/ContactForm";
 import Checkout from "./pages/Checkout";
+
+// Páginas nuevas
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Intranet from "./pages/intranet";
 
 export default function App() {
   return (
@@ -23,6 +29,10 @@ export default function App() {
               <Route path="/contact" element={<ContactForm />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
+              {/* 🔽 Rutas nuevas */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/intranet" element={<Intranet />} /> {/* 👈 nueva ruta */}
             </Routes>
           </div>
           <Footer />

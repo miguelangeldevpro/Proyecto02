@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { ShoppingCart } from "lucide-react";
 
-
 export default function Navbar() {
   const { cartItems } = useCart();
 
@@ -32,26 +31,47 @@ export default function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Menú colapsable */}
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
+            {/* Inicio normal que lleva a "/" */}
             <li className="nav-item">
               <Link className="nav-link" to="/">Inicio</Link>
             </li>
+
+            {/* Dropdown separado para Cuenta */}
+            <li className="nav-item dropdown">
+              <button
+                className="btn nav-link dropdown-toggle"
+                id="cuentaDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+              </button>
+              <ul className="dropdown-menu" aria-labelledby="cuentaDropdown">
+                <li>
+                  <Link className="dropdown-item" to="/login">Iniciar Sesión</Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/register">Crear Cuenta</Link>
+                </li>
+              </ul>
+            </li>
+
+            {/* Otros enlaces */}
             <li className="nav-item">
               <Link className="nav-link" to="/products">Productos</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/contact">Contacto</Link>
             </li>
-            <li>
-              <Link className="nav-link" to = "/checkout"> Pago </Link>
+            <li className="nav-item">
+              <Link className="nav-link" to="/checkout">Pago</Link>
             </li>
           </ul>
 
           {/* Carrito con contador */}
           <ul className="navbar-nav ms-3 d-flex align-items-center">
-            <li className="nav-item position-relative">
+            <li className="nav-item position-relative me-3">
               <Link className="nav-link" to="/cart">
                 <ShoppingCart size={28} />
                 {totalCount > 0 && (
