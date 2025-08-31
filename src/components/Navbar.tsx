@@ -44,6 +44,9 @@ export default function Navbar() {
             <li className="nav-item">
               <Link className="nav-link" to="/contact">Contacto</Link>
             </li>
+            <li>
+              <Link className="nav-link" to = "/checkout"> Pago </Link>
+            </li>
           </ul>
 
           {/* Carrito con contador */}

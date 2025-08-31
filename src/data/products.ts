@@ -21,6 +21,8 @@ export interface Product {
   stock: number;
   image: string;
   description: string;
+  discount: number; // porcentaje de descuento
+  rating: number;   // calificación de estrellas (1-5)
 }
 
 // Marcas disponibles
@@ -53,7 +55,9 @@ export const products: Product[] = [
     price: 1200,
     stock: 15,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162332-1200-auto?v=638682359818430000",
-    description: "Último iPhone con cámara Pro y rendimiento increíble."
+    description: "Último iPhone con cámara Pro y rendimiento increíble.",
+    discount: 10,
+    rating: 5
   },
   {
     id: 2,
@@ -63,7 +67,9 @@ export const products: Product[] = [
     price: 999,
     stock: 20,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162333-1200-auto",
-    description: "iPhone con gran batería y diseño elegante."
+    description: "iPhone con gran batería y diseño elegante.",
+    discount: 5,
+    rating: 4
   },
   // Smartphones Samsung
   {
@@ -74,7 +80,9 @@ export const products: Product[] = [
     price: 1000,
     stock: 18,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162334-1200-auto",
-    description: "Potente smartphone con cámara profesional."
+    description: "Potente smartphone con cámara profesional.",
+    discount: 8,
+    rating: 5
   },
   {
     id: 4,
@@ -84,7 +92,9 @@ export const products: Product[] = [
     price: 750,
     stock: 12,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162335-1200-auto",
-    description: "Tablet Android con pantalla AMOLED y alta productividad."
+    description: "Tablet Android con pantalla AMOLED y alta productividad.",
+    discount: 12,
+    rating: 4
   },
   // Smartphones Xiaomi
   {
@@ -95,7 +105,9 @@ export const products: Product[] = [
     price: 800,
     stock: 25,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162336-1200-auto",
-    description: "Gran rendimiento a precio competitivo."
+    description: "Gran rendimiento a precio competitivo.",
+    discount: 7,
+    rating: 4
   },
   {
     id: 6,
@@ -105,9 +117,11 @@ export const products: Product[] = [
     price: 450,
     stock: 30,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162337-1200-auto",
-    description: "Tablet de alto rendimiento para estudiantes y profesionales."
+    description: "Tablet de alto rendimiento para estudiantes y profesionales.",
+    discount: 10,
+    rating: 4
   },
-  // Laptops
+  // Laptops Apple y Sony
   {
     id: 7,
     name: "MacBook Pro 16\" M2",
@@ -116,7 +130,9 @@ export const products: Product[] = [
     price: 2500,
     stock: 10,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162338-1200-auto",
-    description: "Laptop profesional con chip M2 y pantalla Retina."
+    description: "Laptop profesional con chip M2 y pantalla Retina.",
+    discount: 15,
+    rating: 5
   },
   {
     id: 8,
@@ -126,9 +142,11 @@ export const products: Product[] = [
     price: 2000,
     stock: 8,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162339-1200-auto",
-    description: "Laptop ultraligera y potente para trabajo y ocio."
+    description: "Laptop ultraligera y potente para trabajo y ocio.",
+    discount: 10,
+    rating: 4
   },
-  // Accesorios
+  // Accesorios Apple
   {
     id: 9,
     name: "Apple AirPods Pro",
@@ -137,8 +155,11 @@ export const products: Product[] = [
     price: 250,
     stock: 50,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162340-1200-auto",
-    description: "Auriculares inalámbricos con cancelación de ruido."
+    description: "Auriculares inalámbricos con cancelación de ruido.",
+    discount: 5,
+    rating: 5
   },
+  // Wearables Samsung
   {
     id: 10,
     name: "Samsung Galaxy Watch 6",
@@ -147,6 +168,8 @@ export const products: Product[] = [
     price: 350,
     stock: 30,
     image: "https://carsaperupoc.vtexassets.com/arquivos/ids/162341-1200-auto",
-    description: "Smartwatch con seguimiento de salud y deportes."
+    description: "Smartwatch con seguimiento de salud y deportes.",
+    discount: 8,
+    rating: 4
   },
 ];

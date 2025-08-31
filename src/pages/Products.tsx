@@ -6,11 +6,8 @@ import Swal from "sweetalert2";
 import { products, marcas, categories, Product, Marca, Category } from "../data/products";
 import { useCart } from "../context/CartContext";
 
-//importaciones de  inconos
-import { Eye } from "lucide-react";
-import { ShoppingCart } from "lucide-react";
-//end importaciones de iconos
-
+// Iconos
+import { Eye, ShoppingCart } from "lucide-react";
 
 export default function Products() {
   const { addToCart } = useCart();
@@ -26,7 +23,6 @@ export default function Products() {
     );
   });
 
-  // ✅ función para mostrar SweetAlert
   const showAlert = (message: string) => {
     Swal.fire({
       position: "top-end",
@@ -35,8 +31,6 @@ export default function Products() {
       showConfirmButton: false,
       timer: 1300
     });
-
-    
   };
 
   return (
@@ -96,13 +90,6 @@ export default function Products() {
             return (
               <div key={product.id} className="col-6 col-md-4 mb-4">
                 <div className="card h-100 shadow-sm">
-                  {/* <img
-                    src={product.image}
-                    className="card-img-top p-3"
-                    alt={product.name}
-                    style={{ height: "200px", objectFit: "contain" }}
-                  /> */}
-
                   <img
                     src={product.image}
                     className="card-img-top p-3"
@@ -112,16 +99,35 @@ export default function Products() {
                     data-bs-toggle="modal"
                     data-bs-target="#productModal"
                   />
-                  
+
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{product.name}</h5>
                     <p className="text-muted mb-1">
                       {marca?.name} - {category?.name}
                     </p>
-                    <p className="text-success fw-bold mb-1">S/{product.price}.00</p>
+
+                    {/* Precio con descuento */}
+                    <p className="text-success fw-bold mb-1">
+                      S/
+                      {product.discount
+                        ? (product.price * (1 - product.discount / 100)).toFixed(2)
+                        : product.price.toFixed(2)}
+                    </p>
+
+                    {/* Calificación con estrellas */}
+                    <p className="mb-2">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span
+                          key={i}
+                          style={{ color: i < (product.rating || 0) ? "#ffc107" : "#e4e5e9" }}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </p>
+
                     <p className="text-truncate mb-2">{product.description}</p>
-                    
-                    {/* Botón Comprar Ahora con SweetAlert2 */}
+
                     <button
                       className="btn btn-primary mt-auto d-flex justify-content-center align-items-center gap-2"
                       onClick={() => {
@@ -132,13 +138,13 @@ export default function Products() {
                       <ShoppingCart size={18} /> Comprar Ahora
                     </button>
                     <button
-                        className="btn btn-outline-secondary mt-2 d-flex justify-content-center align-items-center gap-2"
-                        onClick={() => setSelectedProduct(product)}
-                        data-bs-toggle="modal"
-                        data-bs-target="#productModal"
-                      >
-                        <Eye size={18} /> Ver
-                      </button>                
+                      className="btn btn-outline-secondary mt-2 d-flex justify-content-center align-items-center gap-2"
+                      onClick={() => setSelectedProduct(product)}
+                      data-bs-toggle="modal"
+                      data-bs-target="#productModal"
+                    >
+                      <Eye size={18} /> Ver
+                    </button>
                   </div>
                 </div>
               </div>
@@ -181,8 +187,26 @@ export default function Products() {
                   </div>
                   <div className="col-md-6">
                     <p>
-                      <strong>Precio:</strong> ${selectedProduct.price}
+                      <strong>Precio:</strong>{" "}
+                      S/
+                      {selectedProduct.discount
+                        ? (selectedProduct.price * (1 - selectedProduct.discount / 100)).toFixed(2)
+                        : selectedProduct.price.toFixed(2)}
                     </p>
+
+                    {/* Calificación modal */}
+                    <p>
+                      <strong>Calificación:</strong>{" "}
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span
+                          key={i}
+                          style={{ color: i < (selectedProduct.rating || 0) ? "#ffc107" : "#e4e5e9" }}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </p>
+
                     <p>
                       <strong>Stock:</strong> {selectedProduct.stock} unidades
                     </p>
@@ -191,14 +215,12 @@ export default function Products() {
                     </p>
                     <p>{selectedProduct.description}</p>
 
-                    {/* Botón Añadir al carrito con SweetAlert2 */}
-                  <button
+                    <button
                       className="btn btn-success mt-3 d-flex justify-content-center align-items-center gap-2"
                       onClick={() => {
                         addToCart(selectedProduct);
                         showAlert(`${selectedProduct.name} agregado al carrito 🛒`);
 
-                        // cerrar modal con Bootstrap
                         const modal = document.getElementById("productModal");
                         if (modal) {
                           (modal as any).classList.remove("show");

@@ -1,175 +1,160 @@
-// src/pages/Home.tsx
+// src/pages/Checkout.tsx
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import { marcas, categories, products, Marca, Category, Product } from "../data/products";
 import { useCart } from "../context/CartContext";
-import ContactForm from "../components/ContactForm";
 import Swal from "sweetalert2";
 
-export default function Home() {
-  const featuredProducts: Product[] = products.slice(0, 6);
-  const { addToCart } = useCart();
+export default function Checkout() {
+  const { cartItems, clearCart } = useCart();
 
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [formData, setFormData] = useState({
+    medioPago: "Tarjeta",
+    nrotarjeta: "",
+    titular: "",
+    dni: "",
+    vencimiento: "",
+    cvc: "",
+  });
 
-  // ✅ Función para mostrar alertas con SweetAlert2
+  // ✅ Función para mostrar alertas
   const showAlert = (message: string) => {
     Swal.fire({
-      title: "Producto agregado",
-      text: message,
+      position: "center",
       icon: "success",
-      timerProgressBar: true,
-  
-      
+      title: message,
+      showConfirmButton: false,
+      timer: 2000,
     });
   };
 
-  // Agregar al carrito con alerta
-  const handleAddToCart = (product: Product) => {
-    addToCart(product);
-    showAlert(`"${product.name}" fue agregado al carrito.`);
+  // ✅ Manejo del cambio en inputs
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleViewMore = (product: Product) => {
-    setSelectedProduct(product);
-    const modal = new window.bootstrap.Modal(document.getElementById("productModal")!);
-    modal.show();
+  // ✅ Generar fecha de vencimiento aleatoria
+  const generarFechaVencimiento = () => {
+    const mes = Math.floor(Math.random() * 12) + 1;
+    const año = new Date().getFullYear() + Math.floor(Math.random() * 5) + 1;
+    return `${mes.toString().padStart(2, "0")}/${año}`;
+  };
+
+  // ✅ Procesar compra
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (cartItems.length === 0) {
+      showAlert("⚠️ El carrito está vacío.");
+      return;
+    }
+
+    // Generar fecha vencimiento si está vacía
+    const vencimientoFinal = formData.vencimiento || generarFechaVencimiento();
+
+    // Crear objeto de compra
+    const purchaseData = {
+      cliente: { ...formData, vencimiento: vencimientoFinal },
+      productos: cartItems.map((item) => ({
+        nombre: item.product.name,
+        cantidad: item.quantity,
+        subtotal: item.product.price * item.quantity,
+      })),
+      total: cartItems.reduce(
+        (acc, item) => acc + item.product.price * item.quantity,
+        0
+      ),
+      fecha: new Date().toLocaleString(),
+    };
+
+    // Guardar en LocalStorage
+    const existingPurchases = JSON.parse(localStorage.getItem("compras") || "[]");
+    existingPurchases.push(purchaseData);
+    localStorage.setItem("compras", JSON.stringify(existingPurchases));
+
+    // Mensaje de éxito
+    showAlert("🎉 Tu pago fue realizado con éxito");
+
+    clearCart();
   };
 
   return (
-    <div>
-      {/* 🔹 Hero con carrusel */}
-      <div className="hero-container position-relative">
-        <div
-          id="heroCarousel"
-          className="carousel slide"
-          data-bs-ride="carousel"
-          data-bs-interval="4000"
-        >
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img
-                src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace"
-                className="d-block w-100"
-                alt="Smartphones"
-                style={{ height: "90vh", objectFit: "cover" }}
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
-                className="d-block w-100"
-                alt="Auriculares"
-                style={{ height: "90vh", objectFit: "cover" }}
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                src="https://images.unsplash.com/photo-1587829741301-dc798b83add3"
-                className="d-block w-100"
-                alt="Laptop"
-                style={{ height: "90vh", objectFit: "cover" }}
-              />
-            </div>
-          </div>
+    <div className="container my-5">
+      <h2 className="mb-4">Formulario de Pago</h2>
+      <form onSubmit={handleSubmit} className="row g-3">
+        <div className="col-md-6">
+          <label className="form-label">Medio de Pago</label>
+          <select
+            name="medioPago"
+            value={formData.medioPago}
+            onChange={handleChange}
+            className="form-select"
+          >
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Yape">Yape</option>
+            <option value="Plin">Plin</option>
+          </select>
         </div>
-
-        {/* Texto encima del carrusel */}
-        <div
-          className="hero-text text-center text-light position-absolute top-50 start-50 translate-middle"
-          style={{ textShadow: "2px 2px 8px rgba(0,0,0,0.7)" }}
-        >
-          <h1 className="display-2 fw-bold">
-            Bienvenido a <span style={{ color: "#0d6efd" }}>MovilNova</span>
-          </h1>
-          <p className="lead fs-4">Compra los últimos smartphones, laptops, accesorios y mucho más.</p>
+        <div className="col-md-6">
+          <label className="form-label">Número de Tarjeta</label>
+          <input
+            type="text"
+            name="nrotarjeta"
+            value={formData.nrotarjeta}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
         </div>
-      </div>
-
-      {/* Productos Destacados */}
-      <div id="featured" className="container mb-5">
-        <h2 className="mb-4"> </h2>
-        <div className="row">
-          {featuredProducts.map((product: Product) => (
-            <div key={product.id} className="col-6 col-md-4 mb-4">
-              <div className="card h-100 shadow-sm">
-                <img
-                  src={product.image}
-                  className="card-img-top p-3"
-                  alt={product.name}
-                  style={{ height: "200px", objectFit: "contain" }}
-                />
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{product.name}</h5>
-                  <p className="text-success fw-bold">${product.price}</p>
-                  <p className="text-truncate">{product.description}</p>
-                  <div className="mt-auto d-flex gap-2">
-                    <button
-                      className="btn btn-primary w-100"
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      Agregar al carrito
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary w-100"
-                      onClick={() => handleViewMore(product)}
-                    >
-                      Ver más
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="col-md-6">
+          <label className="form-label">Titular</label>
+          <input
+            type="text"
+            name="titular"
+            value={formData.titular}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
         </div>
-      </div>
-
-      {/* Modal Ver Más */}
-      <div
-        className="modal fade"
-        id="productModal"
-        tabIndex={-1}
-        aria-labelledby="productModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered modal-lg">
-          <div className="modal-content">
-            {selectedProduct && (
-              <>
-                <div className="modal-header">
-                  <h5 className="modal-title">{selectedProduct.name}</h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Cerrar"
-                  ></button>
-                </div>
-                <div className="modal-body d-flex flex-column flex-md-row align-items-center gap-4">
-                  <img
-                    src={selectedProduct.image}
-                    alt={selectedProduct.name}
-                    className="img-fluid"
-                    style={{ maxWidth: "300px", objectFit: "contain" }}
-                  />
-                  <div>
-                    <h4 className="text-success">${selectedProduct.price}</h4>
-                    <p>{selectedProduct.description}</p>
-                    <p><strong>Material:</strong> Aluminio y vidrio</p>
-                    <button
-                      className="btn btn-primary mt-3"
-                      onClick={() => handleAddToCart(selectedProduct)}
-                    >
-                      Agregar al carrito
-                    </button>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+        <div className="col-md-6">
+          <label className="form-label">DNI</label>
+          <input
+            type="text"
+            name="dni"
+            value={formData.dni}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
         </div>
-      </div>
+        <div className="col-md-4">
+          <label className="form-label">Fecha de Vencimiento</label>
+          <input
+            type="text"
+            name="vencimiento"
+            value={formData.vencimiento}
+            onChange={handleChange}
+            placeholder="MM/AAAA"
+            className="form-control"
+          />
+        </div>
+        <div className="col-md-2">
+          <label className="form-label">CVC</label>
+          <input
+            type="text"
+            name="cvc"
+            value={formData.cvc}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="col-12">
+          <button type="submit" className="btn btn-success w-100">
+            Pagar
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
