@@ -114,7 +114,7 @@ export default function Home() {
                   <div className="mt-auto">
                     <button
                       className="btn btn-primary w-100"
-                      onClick={() => handleAddToCart(product)}
+                       onClick={() => handleAddToCart(product)}
                     >
                       Agregar al carrito
                     </button>

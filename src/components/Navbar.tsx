@@ -1,24 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ShoppingCart, User } from "lucide-react";
 import { useCart } from "../context/CartContext";
-import { ShoppingCart } from "lucide-react";
 
 export default function Navbar() {
   const { cartItems } = useCart();
+  const usuarioActual = JSON.parse(localStorage.getItem("usuarioActual") || "null");
 
-  // Total de productos en el carrito
   const totalCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-3 sticky-top">
       <div className="container">
-        {/* Logo */}
         <Link className="navbar-brand fw-bold fs-4" to="/">
           <span style={{ color: "#0d6efd" }}>Movil</span>
           <span style={{ color: "#ffffff" }}>Nova</span>
         </Link>
 
-        {/* Botón hamburguesa para móviles */}
         <button
           className="navbar-toggler"
           type="button"
@@ -33,44 +31,50 @@ export default function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
-            {/* Inicio normal que lleva a "/" */}
-            <li className="nav-item">
-              <Link className="nav-link" to="/">Inicio</Link>
-            </li>
+            <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/products">Productos</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/contact">Contacto</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/checkout">Pago</Link></li>
+          </ul>
 
-            {/* Dropdown separado para Cuenta */}
-            <li className="nav-item dropdown">
+          <ul className="navbar-nav ms-3 d-flex align-items-center">
+            {/* Usuario con dropdown */}
+            <li className="nav-item dropdown me-3">
               <button
-                className="btn nav-link dropdown-toggle"
-                id="cuentaDropdown"
+                className="btn nav-link dropdown-toggle d-flex align-items-center gap-2"
+                id="userDropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
+                <User size={24} />
+                {usuarioActual ? usuarioActual.nombre : "Cuenta"}
               </button>
-              <ul className="dropdown-menu" aria-labelledby="cuentaDropdown">
-                <li>
-                  <Link className="dropdown-item" to="/login">Iniciar Sesión</Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/register">Crear Cuenta</Link>
-                </li>
+              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                {usuarioActual ? (
+                  <>
+                    <li><Link className="dropdown-item" to="/perfil">Perfil</Link></li>
+                    <li>
+                      <button
+                        className="dropdown-item text-danger"
+                        onClick={() => {
+                          localStorage.removeItem("usuarioActual");
+                          window.location.href = "/login";
+                        }}
+                      >
+                        Cerrar Sesión
+                      </button>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li><Link className="dropdown-item" to="/login">Iniciar Sesión</Link></li>
+                    <li><Link className="dropdown-item" to="/register">Crear Cuenta</Link></li>
+                  </>
+                )}
               </ul>
             </li>
 
-            {/* Otros enlaces */}
-            <li className="nav-item">
-              <Link className="nav-link" to="/products">Productos</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/contact">Contacto</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/checkout">Pago</Link>
-            </li>
-          </ul>
-
-          {/* Carrito con contador */}
-          <ul className="navbar-nav ms-3 d-flex align-items-center">
+            {/* Carrito */}
             <li className="nav-item position-relative me-3">
               <Link className="nav-link" to="/cart">
                 <ShoppingCart size={28} />
